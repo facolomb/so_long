@@ -9,70 +9,69 @@
 /*   Updated: 2022/02/02 14:25:08 by facolomb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "so_long.h"
-#include "include/get_next_line.h"
 
-void	ft_test(t_point *point, void *mlx_ptr, char c)
+void	*ft_imagetoput(t_point *point, t_image image, char c)
 {
 	char *test;
 	static void *img;
 	int img_width;
 	int img_height;
-	//test = "./img/grass.xpm";
 
 	if (c == '0')
-		test = "./img/grass.xpm";
+		img = mlx_xpm_file_to_image(point->mlx_ptr, image.grass, &img_width, &img_height);
 	else if (c == '1')
-		test = "./img/arbre1.xpm";
+		img = mlx_xpm_file_to_image(point->mlx_ptr, image.tree, &img_width, &img_height);
 	else if (c == 'C')
-		test = ".img/sbb.xpm";
+		img = mlx_xpm_file_to_image(point->mlx_ptr, image.collectable, &img_width, &img_height);
 	else if (c == 'E')
-		test = "./img/end.xpm";
+		img = mlx_xpm_file_to_image(point->mlx_ptr, image.end, &img_width, &img_height);
 	else
-		test = "./img/lixy.xpm";
-	img = mlx_xpm_file_to_image(mlx_ptr, test, &img_width, &img_height);
-	point->img_ptr = img;
+		img = mlx_xpm_file_to_image(point->mlx_ptr, image.charachter, &img_width, &img_height);
+	return (img);
+}
+
+void	ft_manageimg(t_map *map, t_point *img, t_image image)
+{
+	int		i;
+	int		y;
+
+	y = 0;
+	while (map->map[y])
+	{
+		i = 0;
+		while (map->map[y][i] != '\0' && map->map[y][i] != '\n')
+		{
+			img->void_rtn = ft_imagetoput(img, image, map->map[y][i]);
+			mlx_put_image_to_window(img->mlx_ptr, img->win_ptr, img->void_rtn, i * 100, y * 100);
+			i++;
+		}
+		y++;
+	}
 }
 
 int	main(void)
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
-	int		img_width;
 	t_point	img;
+	t_image	image;
+	t_map	map;
 	int		fd;
-	char	*str;
-	char	*tmp;
 	int		i;
-	int		y;
-	char	c;
 
-	fd = open("test.ber", O_RDONLY);
-	y = 1;
-	mlx_ptr = mlx_init();
-	win_ptr = mlx_new_window(mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "So_Long 42");
-	img.img_ptr = mlx_new_image(mlx_ptr, 100, 100);
-	img.addr = mlx_get_data_addr(img.img_ptr, &img.bits_per_pixel, &img.line_length, &img.endian);
-	str = get_next_line(fd);
-	while (str)
+	i = 0;
+	ft_map("test.ber", &map);
+	ft_printf("-----------------\n");
+	while (i < 5)
 	{
-		i = 0;
-		//printf("%s", str);
-		while (str[i])
-		{
-			printf("%c", str[i]);
-			c = str[i];
-			ft_test(&img, mlx_ptr, c);
-			i++;
-			mlx_put_image_to_window(mlx_ptr, win_ptr, img.img_ptr, i * 100, y * 100);
-		}
-		y++;
-		tmp = str;
-		str = get_next_line(fd);
-		free(tmp);
+		ft_printf("%s\n", map.map[i]);
+		i++;
 	}
-	free(str);
-	mlx_loop(mlx_ptr);
+	img.mlx_ptr = mlx_init();
+	img.win_ptr = mlx_new_window(img.mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "So_Long 42");
+	img.img_ptr = mlx_new_image(img.mlx_ptr, 100, 100);
+	img.addr = mlx_get_data_addr(img.img_ptr, &img.bits_per_pixel, &img.line_length, &img.endian);
+	ft_storeimg(&image);
+	ft_manageimg(&map, &img, image);
+	mlx_loop(img.mlx_ptr);
 	return (0);
 }
