@@ -16,7 +16,6 @@ static char	*ft_tampon(char *str)
 {
 	size_t	i;
 	char	*dest;
-	char	*tmp;
 
 	dest = NULL;
 	i = 0;
@@ -24,8 +23,7 @@ static char	*ft_tampon(char *str)
 	{
 		if (str[i] == '\0')
 		{
-			tmp = str;
-			free (tmp);
+			free (str);
 			return (NULL);
 		}
 		i++;
@@ -33,13 +31,11 @@ static char	*ft_tampon(char *str)
 	if (str[i + 1] != '\0')
 	{
 		dest = ft_strdup(str + i + 1);
-		tmp = str;
-		free (tmp);
+		free (str);
 	}
 	else
 	{
-		tmp = str;
-		free (tmp);
+		free (str);
 		return (NULL);
 	}
 	return (dest);
@@ -116,7 +112,6 @@ char	*get_next_line(int fd)
 {
 	char		*res;
 	static char	*t;
-	char		*tmp;
 
 	res = NULL;
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, res, 0) < 0 )
@@ -127,8 +122,7 @@ char	*get_next_line(int fd)
 		t = ft_newt(fd, t);
 	else if (t[0] == '\0' && read(fd, res, BUFFER_SIZE) == 0)
 	{
-		tmp = t;
-		free (tmp);
+		free (t);
 		return (NULL);
 	}
 	else

@@ -1,24 +1,49 @@
-SRCS	= so_long.c
+SRCS			= so_long.c store_img.c init_map.c check_map.c keyhook.c manage_move.c error.c error_init.c end.c 
 
-NAME	= so_long
+INCLUDE 		= include/get_next_line.c include/get_next_line_utils.c 
 
-MLX_PATH	= ./mlx
+FOLDER_SRCS 	= sources/
 
-RM		= rm -f
+NAME			= so_long
 
-CC		= gcc
+MLX_PATH		= ./mlx
+
+MLX				= ./mlx/libmlx.a
+
+LIBFT 			= include/libftprintf.a
+
+LIBFT_PATH		= ./include
+
+RM				= rm -f
+
+CC				= gcc
+
+CFLAGS  		= -Wall -Wextra -Werror
+
+SRC				= $(addprefix ${FOLDER_SRCS},${SRCS})
+
+OBJS			= ${SRC:.c=.o}
+OBJS_INCLUDE	= ${INCLUDE:.c=.o}
+
+OBJ				= ${OBJS_INCLUDE} ${OBJS}
+
+${NAME}:	${OBJ} ${MLX} ${LIBFT}
+			${CC} -g -fsanitize=address ${CFLAGS} -I ${MLX_PATH} ${OBJ} ${LIBFT} -L ${MLX_PATH} -lmlx -framework OpenGL -framework AppKit -o ${NAME}
 
 all:		${NAME}
 
-${NAME}:	makemlx
-			${CC} -I ${MLX_PATH} ${SRCS} -L ${MLX_PATH} -lmlx -framework OpenGL -framework AppKit -o ${NAME}
+.c.o:
+			${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
 
-makemlx:
+${MLX}:
 			${MAKE} -C ${MLX_PATH}
+
+${LIBFT}:
+			${MAKE} -C ${LIBFT_PATH}
 
 clean:
 			${MAKE} clean -C ${LIBFT_PATH}
-			${RM} ${NAME}
+			${RM} ${OBJ}
 
 fclean:		clean
 			${MAKE} fclean -C ${LIBFT_PATH}
