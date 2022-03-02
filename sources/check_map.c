@@ -59,6 +59,15 @@ void	ft_checkinside(t_map *map, int y, int i)
 		ft_incorrectchar(map);
 }
 
+void	ft_checklenght(t_map *map, int i, int y)
+{
+	static int	lenght;
+
+	if (y > 1 && lenght != i)
+		ft_invalidmap(map);
+	lenght = i;
+}
+
 int	ft_checkmap(t_map *map)
 {
 	int	i;
@@ -79,18 +88,10 @@ int	ft_checkmap(t_map *map)
 		}
 		if (map->map[y][i - 1] != '1')
 			return (0);
+		ft_checklenght(map, i, y);
 		y++;
 	}
 	checkline += ft_checkline(map->map[0]);
 	checkline += ft_checkline(map->map[map->height - 1]);
 	return (ft_ismapgood(checkline, map->nbcoll, map->nbchar, map->nbend));
-}
-
-void	ft_checkfiletype(t_map *map, char *str)
-{
-	if (ft_strncmp(str + (ft_strlen(str) - 4), ".ber", 5) != 0)
-	{
-		printf("%s\n", str + (ft_strlen(str) - 4));
-		ft_wrongfile(map);
-	}
 }

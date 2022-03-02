@@ -11,6 +11,15 @@
 /* ************************************************************************** */
 #include "so_long.h"
 
+void	ft_checkfiletype(t_map *map, char *str)
+{
+	if (ft_strncmp(str + (ft_strlen(str) - 4), ".ber", 5) != 0)
+	{
+		printf("%s\n", str + (ft_strlen(str) - 4));
+		ft_wrongfile(map);
+	}
+}
+
 void	*ft_imagetoput(t_map *map, t_image image, char c)
 {
 	static void	*img;
