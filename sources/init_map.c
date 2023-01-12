@@ -52,6 +52,7 @@ int	ft_fillmap(t_map *map, char *str, int y)
 		i++;
 	}
 	map->map[y][i] = '\0';
+	free(str);
 	return (i);
 }
 

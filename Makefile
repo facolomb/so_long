@@ -28,7 +28,7 @@ OBJS_INCLUDE	= ${INCLUDE:.c=.o}
 OBJ				= ${OBJS_INCLUDE} ${OBJS}
 
 ${NAME}:	${OBJ} ${MLX} ${LIBFT}
-			${CC} -g -fsanitize=address ${CFLAGS} -I ${MLX_PATH} ${OBJ} ${LIBFT} -L ${MLX_PATH} -lmlx -framework OpenGL -framework AppKit -o ${NAME}
+			${CC} ${CFLAGS} -I ${MLX_PATH} ${OBJ} ${LIBFT} -L ${MLX_PATH} -lmlx -framework OpenGL -framework AppKit -o ${NAME}
 
 all:		${NAME}
 
